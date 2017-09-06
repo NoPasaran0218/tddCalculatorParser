@@ -97,7 +97,7 @@ describe('parser spec', function(){
         should(parser.add('18')).equal(18);
     });
 
-    it('should return "(1/2 + 5 + 4*5" -> undefined', function () {
+    it('should return "(1/2 + 5 + 4*5"  -> undefined', function () {
         should(parser.add('(1/2 + 5 + 4*5')).equal(undefined);
     });
 
