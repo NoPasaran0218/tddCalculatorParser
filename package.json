@@ -1,0 +1,28 @@
+{
+  "name": "evalexpr",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "should": "^12.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NoPasaran0218/tddCalculatorParser.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NoPasaran0218/tddCalculatorParser/issues"
+  },
+  "homepage": "https://github.com/NoPasaran0218/tddCalculatorParser#readme",
+  "description": ""
+}
