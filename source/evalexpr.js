@@ -12,34 +12,42 @@ Array.prototype.clean = function (deleteValue) {
 
 var parser = {
     priorities: [
-        {
-            sign: ")",
-            val: 0
-        },
-        {
-            sign: "(",
-            val: 1
-        },
-        {
-            sign: "+",
-            val: 2
-        },
-        {
-            sign: "-",
-            val: 2
-        },
-        {
-            sign: "*",
-            val: 3
-        },
-        {
-            sign: "/",
-            val: 3
-        },
-        {
-            sign: "@",
-            val: 4
-        }],
+        { sign: ")", val: 0 },
+        { sign: "(", val: 1 },
+        { sign: "+", val: 2, doOperation:function (stack) {
+            var temp1 = stack.pop();
+            var temp2 = stack.pop();
+            var tempVal1 = +temp1.val;
+            var tempVal2 = +temp2.val;
+            var res = tempVal1+tempVal2;
+            stack.push({type:"digit", val:res});
+        } },
+        { sign: "-", val: 2, doOperation: function (stack) {
+            var temp1 = stack.pop();
+            var temp2 = stack.pop();
+            var tempVal1 = +temp1.val;
+            var tempVal2 = +temp2.val;
+            var res = tempVal2-tempVal1;
+            stack.push({type:"digit", val:res});
+        }  },
+        { sign: "*", val: 3, doOperation:function (stack) {
+            var temp1 = stack.pop();
+            var temp2 = stack.pop();
+            var tempVal1 = +temp1.val;
+            var tempVal2 = +temp2.val;
+            var res = tempVal1*tempVal2;
+            stack.push({type:"digit", val:res});
+        }  },
+        { sign: "/", val: 3, doOperation:function (stack) {
+            var temp1 = stack.pop();
+            var temp2 = stack.pop();
+            var tempVal1 = +temp1.val;
+            var tempVal2 = +temp2.val;
+            var res = tempVal2/tempVal1;
+            stack.push({type:"digit", val:res});
+        }  },
+        { sign: "@", val: 4}
+        ],
     add: function (str) {
 
         /*if(!this.isValid(str)){
@@ -48,12 +56,14 @@ var parser = {
         //delete whitespace
         if(!isNaN(+str))
             return +str;
+
         var result = "";
         for (var i = 0; i < str.length; i++) {
             if (str[i] !== ' ') {
                 result += str[i];
             }
         }
+
         if(!this.isValid(result)){
             return undefined;
         }
@@ -97,7 +107,7 @@ var parser = {
         var mathArray = result.split(' ');
         mathArray.clean("");
 
-        //приводимо до типу {type:[opetation/digit], val: value}
+        //convert to object {type:[opetation/digit], val: value}
         var mathString = [];
         for (var i = 0; i < mathArray.length; i++) {
             if (separators.indexOf(mathArray[i]) != -1) {
@@ -147,6 +157,8 @@ var parser = {
             }
         }
         stack = [];
+
+        //calculate poliz
         while(outPut.length>0){
             if (outPut[0].type=='digit')
                 stack.push(outPut.shift());
@@ -157,34 +169,8 @@ var parser = {
                     tempVal = -tempVal;
                     temp.val=tempVal;
                     stack.push(temp);
-                }else if(outPut[0].val=="+"){
-                    var temp1 = stack.pop();
-                    var temp2 = stack.pop();
-                    var tempVal1 = +temp1.val;
-                    var tempVal2 = +temp2.val;
-                    var res = tempVal1+tempVal2;
-                    stack.push({type:"digit", val:res});
-                }else if(outPut[0].val=="-"){
-                    var temp1 = stack.pop();
-                    var temp2 = stack.pop();
-                    var tempVal1 = +temp1.val;
-                    var tempVal2 = +temp2.val;
-                    var res = tempVal2 - tempVal1;
-                    stack.push({type:"digit", val:res});
-                }else if(outPut[0].val=="*"){
-                    var temp1 = stack.pop();
-                    var temp2 = stack.pop();
-                    var tempVal1 = +temp1.val;
-                    var tempVal2 = +temp2.val;
-                    var res = tempVal1*tempVal2;
-                    stack.push({type:"digit", val:res});
-                }else if(outPut[0].val=="/"){
-                    var temp1 = stack.pop();
-                    var temp2 = stack.pop();
-                    var tempVal1 = +temp1.val;
-                    var tempVal2 = +temp2.val;
-                    var res = tempVal2 / tempVal1;
-                    stack.push({type:"digit", val:res});
+                }else {
+                    this.getOperation(outPut[0].val).doOperation(stack);
                 }
                 outPut.shift();
             }
@@ -195,6 +181,13 @@ var parser = {
 
     getPriority: function (sign) {
         return this.priorities.find(o => o.sign == sign).val;
+    },
+
+    getOperation: function(sign){
+        for(var i=0; i<this.priorities.length; i++){
+            if (this.priorities[i].sign==sign)
+                return this.priorities[i];
+        }
     },
 
     isValid: function(str){
