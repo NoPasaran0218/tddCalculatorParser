@@ -1,2 +1,2 @@
 # tddCalculatorParser
-[![GitHub issues](https://img.shields.io/github/issues/NoPasaran0218/tddCalculatorParser.svg)](https://github.com/NoPasaran0218/tddCalculatorParser/issues)
+[![Travis](https://img.shields.io/travis/rust-lang/rust.svg)](https://travis-ci.org/NoPasaran0218/tddCalculatorParser)
